@@ -4,13 +4,8 @@
 // what a specific agent operation is allowed to do. It mirrors the OS
 // concept of a capability token: holding the token grants the right to
 // perform the operation.
-//
-// - tool: the name of the tool (e.g. "read_file", "run_shell")
-// - action: the operation within that tool (e.g. "read", "write", "execute")
-// - resource: a pattern string that may contain wildcards (*, **)
 
 /// A single capability describing one permitted operation.
-#derive(Eq, Debug)
 pub struct Capability {
   tool : String
   action : String
@@ -22,7 +17,12 @@ pub fn new(tool : String, action : String, resource : String) -> Capability {
   { tool, action, resource }
 }
 
+pub extend Capability with Eq::{not_equal, equal}
+
 /// Return a human-readable representation of this capability.
 pub fn Capability::to_string(self : Capability) -> String {
-  "Capability{tool=\(self.tool), action=\(self.action), resource=\(self.resource)}"
+  let tool = self.tool
+  let action = self.action
+  let resource = self.resource
+  "Capability{tool=" + tool + ", action=" + action + ", resource=" + resource + "}"
 }
