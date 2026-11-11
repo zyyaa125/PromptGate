@@ -1,0 +1,6 @@
+_build/
+.mooncakes/
+docs/
+.git/
+.gitignore
+.moonignore
