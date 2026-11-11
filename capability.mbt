@@ -6,6 +6,7 @@
 // perform the operation.
 
 /// A single capability describing one permitted operation.
+#derive(Eq)
 pub struct Capability {
   tool : String
   action : String
