@@ -1,3 +1,1 @@
-import {
-  "moonbitlang/core/debug",
-}
+// No external dependencies yet — core types only need builtins

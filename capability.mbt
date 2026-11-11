@@ -10,11 +10,12 @@
 // - resource: a pattern string that may contain wildcards (*, **)
 
 /// A single capability describing one permitted operation.
+#derive(Eq, Debug)
 pub struct Capability {
-  pub tool : String
-  pub action : String
-  pub resource : String
-} derive(Eq, Debug)
+  tool : String
+  action : String
+  resource : String
+}
 
 /// Create a new Capability with the given tool, action, and resource pattern.
 pub fn new(tool : String, action : String, resource : String) -> Capability {
@@ -22,10 +23,6 @@ pub fn new(tool : String, action : String, resource : String) -> Capability {
 }
 
 /// Return a human-readable representation of this capability.
-pub fn to_string(self : Capability) -> String {
-  "Capability{"
-  + "tool=" + self.tool + ", "
-  + "action=" + self.action + ", "
-  + "resource=" + self.resource
-  + "}"
+pub fn Capability::to_string(self : Capability) -> String {
+  "Capability{tool=\(self.tool), action=\(self.action), resource=\(self.resource)}"
 }
