@@ -1,12 +1,5 @@
-// Capability data model for PromptGate.
-//
-// A Capability is a triple of (tool, action, resource) that describes
-// what a specific agent operation is allowed to do. It mirrors the OS
-// concept of a capability token: holding the token grants the right to
-// perform the operation.
-
 /// A single capability describing one permitted operation.
-#derive(Eq)
+#derive(Eq, Debug)
 pub struct Capability {
   tool : String
   action : String
@@ -17,8 +10,6 @@ pub struct Capability {
 pub fn new(tool : String, action : String, resource : String) -> Capability {
   { tool, action, resource }
 }
-
-pub extend Capability with Eq::{not_equal, equal}
 
 /// Return a human-readable representation of this capability.
 pub fn Capability::to_string(self : Capability) -> String {
