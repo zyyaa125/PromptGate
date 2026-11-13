@@ -48,6 +48,34 @@ test "unknown version returns error" {
   assert_eq(caught, "99")
 }
 
+test "malformed json returns error" {
+  let json = "not json at all"
+  let caught = try {
+    let _ = @promptgate.load_policy(json)
+    "no_error"
+  } catch {
+    e => match e {
+      @promptgate.PolicyError::InvalidJson(_) => "invalid"
+      _ => "wrong_error"
+    }
+  }
+  assert_eq(caught, "invalid")
+}
+
+test "unknown rule type returns error" {
+  let json = "{\"version\":\"1\",\"rules\":[{\"rule_type\":\"bogus\",\"tool\":\"x\",\"action\":\"y\",\"resource\":\"z\"}]}"
+  let caught = try {
+    let _ = @promptgate.load_policy(json)
+    "no_error"
+  } catch {
+    e => match e {
+      @promptgate.PolicyError::InvalidJson(_) => "invalid"
+      _ => "wrong_error"
+    }
+  }
+  assert_eq(caught, "invalid")
+}
+
 test "empty rules returns error" {
   let json = "{\"version\":\"1\",\"rules\":[]}"
   let caught = try {

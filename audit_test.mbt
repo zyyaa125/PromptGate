@@ -31,6 +31,20 @@ test "ring buffer evicts oldest entry" {
   assert_eq(all[1].resource, "r3")
 }
 
+test "ring buffer with max_size 1 keeps only latest" {
+  let trail = @promptgate.AuditTrail::new(max_size=1)
+    .record("t1", "a1", "r1", "allow", "reason1")
+    .record("t2", "a2", "r2", "deny", "reason2")
+  let all = trail.all()
+  assert_eq(all.length(), 1)
+  assert_eq(all[0].resource, "r2")
+}
+
+test "empty trail count is zero" {
+  let trail = @promptgate.AuditTrail::new(max_size=10)
+  assert_eq(trail.count(), 0)
+}
+
 test "count reflects current entries" {
   let trail = @promptgate.AuditTrail::new(max_size=5)
     .record("t1", "a1", "r1", "allow", "r")

@@ -15,6 +15,12 @@ test "capability equality" {
   assert_eq(a == c, false)
 }
 
+test "new with empty strings is valid" {
+  let c = @promptgate.new("", "", "")
+  assert_eq(c.tool, "")
+  assert_eq(c.resource, "")
+}
+
 test "to_string includes tool and action" {
   let c = @promptgate.new("run_shell", "execute", "moon")
   let s = c.to_string()

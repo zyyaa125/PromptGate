@@ -27,6 +27,16 @@ test "remaining calls reflects consumption" {
   assert_eq(b2.remaining_calls(), Some(7L))
 }
 
+test "both limits enforced independently" {
+  let b = @promptgate.Budget::new(max_calls=Some(3L), max_tokens=Some(50L), window_seconds=None)
+  // Within both.
+  let (b2, ok1) = b.consume(2L, 30L)
+  assert_eq(ok1, true)
+  // Exceeds tokens but not calls.
+  let (_b3, ok2) = b2.consume(0L, 30L)
+  assert_eq(ok2, false)
+}
+
 test "reset clears consumption" {
   let b = @promptgate.Budget::new(max_calls=Some(5L), max_tokens=None, window_seconds=None)
   let (b2, _) = b.consume(5L, 0L)

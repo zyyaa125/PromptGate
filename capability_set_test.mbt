@@ -50,6 +50,21 @@ test "wildcard tool matches any tool" {
   assert_eq(set.match_("api_call", "read", "data/x"), @promptgate.MatchResult::Allow)
 }
 
+test "action mismatch fails even when tool matches" {
+  let cap = @promptgate.new("read_file", "read", "*")
+  let set = @promptgate.CapabilitySet::new().add_allow(cap)
+  assert_eq(set.match_("read_file", "write", "src/main.mbt"), @promptgate.MatchResult::Deny)
+}
+
+test "multiple denies all checked" {
+  let cap_allow = @promptgate.new("*", "*", "*")
+  let cap_d1 = @promptgate.new("read_file", "read", "*.env")
+  let cap_d2 = @promptgate.new("run_shell", "execute", "rm*")
+  let set = @promptgate.CapabilitySet::new().add_allow(cap_allow).add_deny(cap_d1).add_deny(cap_d2)
+  assert_eq(set.match_("run_shell", "execute", "rm -rf"), @promptgate.MatchResult::Deny)
+  assert_eq(set.match_("read_file", "read", ".env"), @promptgate.MatchResult::Deny)
+}
+
 test "deny added before allow still wins" {
   let cap_deny = @promptgate.new("run_shell", "*", "*")
   let cap_allow = @promptgate.new("run_shell", "execute", "moon")
