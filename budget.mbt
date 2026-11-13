@@ -5,6 +5,7 @@
 // - max_tokens: memory limit (how many tokens consumed)
 // - window_seconds: time window for rate limiting (cgroup period)
 
+///|
 #derive(Eq, Debug)
 pub struct Budget {
   max_calls : Int64?
@@ -15,9 +16,13 @@ pub struct Budget {
   window_start : Int64
 }
 
+///|
 pub extend Budget with Eq::{not_equal, equal}
+
+///|
 pub extend Budget with @moonbitlang/core/debug.Debug::{to_repr}
 
+///|
 /// Create a Budget with optional limits.
 /// Pass None for any limit to disable it.
 pub fn Budget::new(
@@ -35,8 +40,13 @@ pub fn Budget::new(
   }
 }
 
+///|
 /// Attempt to consume the given amount. Returns the updated Budget and whether allowed.
-pub fn Budget::consume(self : Budget, calls : Int64, tokens : Int64) -> (Budget, Bool) {
+pub fn Budget::consume(
+  self : Budget,
+  calls : Int64,
+  tokens : Int64,
+) -> (Budget, Bool) {
   let fresh = self.consume_at(calls, tokens)
   let over_calls = match fresh.max_calls {
     None => false
@@ -49,6 +59,7 @@ pub fn Budget::consume(self : Budget, calls : Int64, tokens : Int64) -> (Budget,
   (fresh, !(over_calls || over_tokens))
 }
 
+///|
 /// Check how many calls remain (None means unlimited).
 pub fn Budget::remaining_calls(self : Budget) -> Int64? {
   match self.max_calls {
@@ -57,6 +68,7 @@ pub fn Budget::remaining_calls(self : Budget) -> Int64? {
   }
 }
 
+///|
 /// Check how many tokens remain (None means unlimited).
 pub fn Budget::remaining_tokens(self : Budget) -> Int64? {
   match self.max_tokens {
@@ -65,6 +77,7 @@ pub fn Budget::remaining_tokens(self : Budget) -> Int64? {
   }
 }
 
+///|
 /// Reset consumed counters to zero. Keeps the same limits.
 pub fn Budget::reset(self : Budget) -> Budget {
   {
@@ -77,6 +90,7 @@ pub fn Budget::reset(self : Budget) -> Budget {
   }
 }
 
+///|
 /// Internal: apply consumption without checking limits.
 fn Budget::consume_at(self : Budget, calls : Int64, tokens : Int64) -> Budget {
   {

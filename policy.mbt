@@ -4,6 +4,7 @@
 // denied, or require user confirmation. This module parses the JSON,
 // validates it, and builds a ready-to-use Gate.
 
+///|
 /// One rule entry from the JSON policy file.
 #derive(FromJson)
 priv struct PolicyRule {
@@ -13,6 +14,7 @@ priv struct PolicyRule {
   resource : String
 }
 
+///|
 /// Top-level policy structure matching the JSON schema.
 #derive(FromJson)
 priv struct PolicyFile {
@@ -20,6 +22,7 @@ priv struct PolicyFile {
   rules : Array[PolicyRule]
 }
 
+///|
 /// Error type for policy loading failures.
 pub(all) suberror PolicyError {
   InvalidJson(String)
@@ -28,6 +31,7 @@ pub(all) suberror PolicyError {
   EmptyRules
 }
 
+///|
 /// Load a Gate from a JSON policy string.
 pub fn load_policy(json_str : String) -> Gate raise PolicyError {
   let file : PolicyFile = try {
@@ -39,9 +43,10 @@ pub fn load_policy(json_str : String) -> Gate raise PolicyError {
 
   match file.version {
     None => raise PolicyError::MissingField("version")
-    Some(v) => if v != "1" && v != "1.0" {
-      raise PolicyError::UnknownVersion(v)
-    }
+    Some(v) =>
+      if v != "1" && v != "1.0" {
+        raise PolicyError::UnknownVersion(v)
+      }
   }
 
   if file.rules.length() == 0 {

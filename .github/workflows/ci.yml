@@ -6,25 +6,39 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
-  build-and-test:
+  verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - name: Setup MoonBit
+      - name: Install MoonBit
         run: |
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
 
-      - name: Format check
+      - name: Update Mooncakes registry
+        run: moon update
+
+      - name: Check formatting
         run: moon fmt --check
 
-      - name: Check
-        run: moon check --deny-warn
+      - name: Verify generated interfaces
+        run: |
+          moon info
+          git diff --exit-code -- '**/pkg.generated.mbti'
 
-      - name: Test
-        run: moon test --deny-warn
+      - name: Check all targets
+        run: moon check --target all --deny-warn
 
-      - name: Build
-        run: moon build --deny-warn
+      - name: Strict tests
+        run: moon test --target all --deny-warn
+
+      - name: Build example
+        run: moon build --target all examples/code_assistant
+
+      - name: Run example
+        run: moon run examples/code_assistant

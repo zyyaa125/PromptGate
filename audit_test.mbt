@@ -1,13 +1,16 @@
+///|
 /// Tests for AuditTrail.
-
 test "record entry and retrieve" {
   let trail = @promptgate.AuditTrail::new(max_size=10)
-  let t = trail.record("read_file", "read", "src/main.mbt", "allow", "matched allow rule").all()
+  let t = trail
+    .record("read_file", "read", "src/main.mbt", "allow", "matched allow rule")
+    .all()
   assert_eq(t.length(), 1)
   assert_eq(t[0].tool, "read_file")
   assert_eq(t[0].verdict, "allow")
 }
 
+///|
 test "multiple entries preserved in order" {
   let trail = @promptgate.AuditTrail::new(max_size=10)
     .record("read_file", "read", "a", "allow", "r1")
@@ -20,6 +23,7 @@ test "multiple entries preserved in order" {
   assert_eq(all[2].resource, "c")
 }
 
+///|
 test "ring buffer evicts oldest entry" {
   let trail = @promptgate.AuditTrail::new(max_size=2)
     .record("t1", "a1", "r1", "allow", "reason1")
@@ -31,6 +35,7 @@ test "ring buffer evicts oldest entry" {
   assert_eq(all[1].resource, "r3")
 }
 
+///|
 test "ring buffer with max_size 1 keeps only latest" {
   let trail = @promptgate.AuditTrail::new(max_size=1)
     .record("t1", "a1", "r1", "allow", "reason1")
@@ -40,11 +45,13 @@ test "ring buffer with max_size 1 keeps only latest" {
   assert_eq(all[0].resource, "r2")
 }
 
+///|
 test "empty trail count is zero" {
   let trail = @promptgate.AuditTrail::new(max_size=10)
   assert_eq(trail.count(), 0)
 }
 
+///|
 test "count reflects current entries" {
   let trail = @promptgate.AuditTrail::new(max_size=5)
     .record("t1", "a1", "r1", "allow", "r")

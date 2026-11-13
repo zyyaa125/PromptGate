@@ -4,6 +4,7 @@
 // with timestamp, request details, verdict, and reason. The ring buffer
 // provides bounded memory with automatic eviction of oldest entries.
 
+///|
 /// One recorded decision.
 #derive(Eq, Debug)
 pub struct AuditEntry {
@@ -15,25 +16,41 @@ pub struct AuditEntry {
   reason : String
 }
 
+///|
 pub extend AuditEntry with Eq::{not_equal, equal}
+
+///|
 pub extend AuditEntry with @moonbitlang/core/debug.Debug::{to_repr}
 
+///|
 #derive(Eq, Debug)
 pub struct AuditTrail {
   entries : Array[AuditEntry]
-  max_size : Int
+  max_size : Int32
 }
 
+///|
 pub extend AuditTrail with Eq::{not_equal, equal}
+
+///|
 pub extend AuditTrail with @moonbitlang/core/debug.Debug::{to_repr}
 
+///|
 /// Create a new AuditTrail with the given maximum size (ring buffer).
-pub fn AuditTrail::new(max_size~ : Int) -> AuditTrail {
+pub fn AuditTrail::new(max_size~ : Int32) -> AuditTrail {
   { entries: [], max_size, }
 }
 
+///|
 /// Record a decision into the trail. Oldest entry is evicted when full.
-pub fn AuditTrail::record(self : AuditTrail, tool : String, action : String, resource : String, verdict : String, reason : String) -> AuditTrail {
+pub fn AuditTrail::record(
+  self : AuditTrail,
+  tool : String,
+  action : String,
+  resource : String,
+  verdict : String,
+  reason : String,
+) -> AuditTrail {
   let entry = AuditEntry::new(tool, action, resource, verdict, reason)
   if self.entries.length() >= self.max_size {
     let mut trimmed : Array[AuditEntry] = []
@@ -46,22 +63,32 @@ pub fn AuditTrail::record(self : AuditTrail, tool : String, action : String, res
   }
 }
 
+///|
 /// Return all recorded entries.
 pub fn AuditTrail::all(self : AuditTrail) -> Array[AuditEntry] {
   self.entries
 }
 
+///|
 /// Return the number of recorded entries.
-pub fn AuditTrail::count(self : AuditTrail) -> Int {
+pub fn AuditTrail::count(self : AuditTrail) -> Int32 {
   self.entries.length()
 }
 
+///|
 /// Create a new AuditEntry.
-pub fn AuditEntry::new(tool : String, action : String, resource : String, verdict : String, reason : String) -> AuditEntry {
+pub fn AuditEntry::new(
+  tool : String,
+  action : String,
+  resource : String,
+  verdict : String,
+  reason : String,
+) -> AuditEntry {
   let ts = current_timestamp()
   { timestamp: ts, tool, action, resource, verdict, reason, }
 }
 
+///|
 /// Current time in milliseconds. In a real implementation this would use
 /// system time; here it returns 0 for deterministic testing.
 fn current_timestamp() -> Int64 {

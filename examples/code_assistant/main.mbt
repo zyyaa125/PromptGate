@@ -1,5 +1,5 @@
+///|
 /// PromptGate integration example: simulated AI code assistant.
-
 fn verdict_label(v : @promptgate.Verdict) -> String {
   match v {
     @promptgate.Verdict::Allow => "Allow"
@@ -8,11 +8,21 @@ fn verdict_label(v : @promptgate.Verdict) -> String {
   }
 }
 
+///|
 fn main {
   let json = "{\"version\":\"1\",\"rules\":[{\"rule_type\":\"deny\",\"tool\":\"read_file\",\"action\":\"read\",\"resource\":\"*.env\"},{\"rule_type\":\"deny\",\"tool\":\"run_shell\",\"action\":\"execute\",\"resource\":\"rm*\"},{\"rule_type\":\"allow\",\"tool\":\"read_file\",\"action\":\"read\",\"resource\":\"workspace/**\"},{\"rule_type\":\"allow\",\"tool\":\"run_shell\",\"action\":\"execute\",\"resource\":\"moon*\"},{\"rule_type\":\"ask\",\"tool\":\"api_call\",\"action\":\"post\",\"resource\":\"api.github.com/*\"}]}"
   let gate = try! @promptgate.load_policy(json)
-  let budget = @promptgate.Budget::new(max_calls=Some(100L), max_tokens=None, window_seconds=None)
-  let mut session = @promptgate.Session::new(id="code-assistant", gate=gate, budget=budget, expires_at=None)
+  let budget = @promptgate.Budget::new(
+    max_calls=Some(100L),
+    max_tokens=None,
+    window_seconds=None,
+  )
+  let mut session = @promptgate.Session::new(
+    id="code-assistant",
+    gate~,
+    budget~,
+    expires_at=None,
+  )
 
   let calls = [
     ("read_file", "read", "workspace/src/main.mbt"),
@@ -39,7 +49,19 @@ fn main {
   let entries = session.audit_entries()
   for i = 0; i < entries.length(); i = i + 1 {
     let e = entries[i]
-    println("  #" + i.to_string() + ": " + e.tool + " " + e.resource + " => " + e.verdict + " (" + e.reason + ")")
+    println(
+      "  #" +
+      i.to_string() +
+      ": " +
+      e.tool +
+      " " +
+      e.resource +
+      " => " +
+      e.verdict +
+      " (" +
+      e.reason +
+      ")",
+    )
   }
   println("")
   let rem = match session.remaining_budget() {
