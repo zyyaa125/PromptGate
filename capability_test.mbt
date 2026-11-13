@@ -1,4 +1,4 @@
-/// Black-box tests for the Capability data model.
+/// Tests for the Capability data model.
 
 test "create capability and check fields" {
   let c = @promptgate.new("read_file", "read", "workspace/*.mbt")
