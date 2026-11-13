@@ -492,16 +492,16 @@ Session {
 
 开发完成后逐项打勾：
 
-- [ ] 个人参赛，一个项目
-- [ ] MoonBit 为主要实现语言
-- [ ] GitHub 仓库公开，提交记录清晰（≥10 次有效提交）
-- [ ] 无空提交、无机械拆分、无复制提交
-- [ ] README 说明目标、安装、使用方法、可复现示例
-- [ ] CI 覆盖 `fmt --check`、`check --deny-warn`、`test --deny-warn`、`build`
-- [ ] 核心路径有完整测试（≥30 个测试用例）
-- [ ] 至少 1 个可运行示例（`moon run examples/code_assistant`）
+- [x] 个人参赛，一个项目
+- [x] MoonBit 为主要实现语言
+- [x] GitHub 仓库公开，提交记录清晰（≥10 次有效提交）
+- [x] 无空提交、无机械拆分、无复制提交
+- [x] README 说明目标、安装、使用方法、可复现示例
+- [x] CI 覆盖 `fmt --check`、`check --deny-warn`、`test --deny-warn`、`build`
+- [x] 核心路径有完整测试（≥48 个测试用例）
+- [x] 至少 1 个可运行示例（`moon run examples/code_assistant`）
 - [ ] 发布到 mooncakes.io
-- [ ] OSI 认可的许可证（Apache-2.0）
-- [ ] 明确说明和 MoonPermit 的差异及互补关系
-- [ ] 申报书回答生态缺口、通用性、3 个场景、核心功能、不做内容、实现路径
-- [ ] 保留学习日志（`docs/learning-log.md`）作为人为决策证据
+- [x] OSI 认可的许可证（Apache-2.0）
+- [x] 明确说明和 MoonPermit 的差异及互补关系
+- [x] 申报书回答生态缺口、通用性、3 个场景、核心功能、不做内容、实现路径
+- [x] 保留学习日志（`docs/learning-log.md`）作为人为决策证据

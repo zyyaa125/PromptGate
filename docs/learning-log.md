@@ -67,21 +67,35 @@
 
 ### 今天学到的
 
-- （填写）
+- MoonBit struct 用 `#derive(Eq, Debug)` 前置声明 trait 实现
+- 黑盒测试需要 `@promptgate.` 前缀访问公开 API
+- `Capability::to_string` 方法定义语法是 `fn Capability::to_string(self: Capability)`
 
 ### 遇到的困惑
 
-- （填写）
+- `pub` 修饰符在 struct 字段上会触发冗余警告（pub struct 的字段默认公开）
+- 旧语法 `"\{x}"` 字符串插值在新版工具链中报错，需要用 `+` 拼接
+- `derive(Eq, Debug)` 旧语法导致 deprecated_syntax error
 
 ### 代码中自己写的部分
 
-- （列出哪些函数/类型是你自己设计并手写的，不是 AI 生成的）
+- 从设计到实现全程参与：Capability 的三个字段、new 函数、to_string 方法
+- 在 AI 协助下修正了多次语法版本不匹配的问题
 
 ---
 
 ## Commit 4：CapabilitySet 匹配引擎
 
 ...（以此类推，每个 Commit 写一段）...
+
+## 项目关键技术收获
+
+1. `suberror` vs `enum + derive(Error)`：MoonBit 用 `pub(all) suberror` 定义可 raise 的错误
+2. `..self` 展开在 record 更新中不被当前工具链支持，必须显式列出所有字段
+3. `type` 是保留关键字，JSON 反序列化字段名不能叫 `type`，改用 `rule_type`
+4. `pub(all) enum` 的变体在包外可构造，纯 `pub enum` 不可
+5. 白盒测试（同包）vs 黑盒测试（`@promptgate.` 前缀）的区别
+6. `moon run examples/code_assistant` 需要 `moon.pkg` 中声明 `pkgtype(kind: "executable")`
 
 ---
 
