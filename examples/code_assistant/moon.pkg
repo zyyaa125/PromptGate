@@ -1,0 +1,5 @@
+import {
+  "zyyaa125/promptgate",
+}
+
+pkgtype(kind: "executable")
